@@ -16,3 +16,6 @@ def hello():
         ret.append(item)
     l=",".join(ret)
     return f"List of jobs is : {l}"
+
+if __name__=="__main__":
+    app.run()
