@@ -12,10 +12,10 @@ def hello():
     cursor.execute("select title,company_name,jd_text from openings")
     ret=[]
     for title, company_name, jd in cursor.fetchall():
-        item=f"{title} :::: {company_name} :::: {jd}"
+        item=f"<b>{title}</b> :::: {company_name} <br/> {jd}"
         ret.append(item)
-    l=",".join(ret)
-    return f"List of jobs is : {l}"
+    l="<hr/>".join(ret)
+    return f"<b>List of jobs is:</b><br/> {l}"
 
 if __name__=="__main__":
     app.run()
