@@ -26,15 +26,28 @@ def initial():
 
 
 @app.route("/jobs") #decorator
-def hello():
+def jobs():
     cursor=dbconnect.cursor()
     cursor.execute("select title,company_name,jd_text from openings")
     ret=[]
     for title, company_name, jd in cursor.fetchall():
-        item=f"<b>{title}</b> :::: {company_name} <br/> {jd}"
+        item=f"<li><b>{title}</b> :::: {company_name} <br/> {jd}</li>"
         ret.append(item)
-    l="<hr/>".join(ret)
-    return f"<h1>List of jobs is:</h1><br/> {l}"
+    jobs="<hr/>".join(ret)
+    return f"""
+    <html>
+    <head>
+    <title> Jobs Page</title>
+    </head>
+
+    <body>
+    <h1>Welcome to jobs page</h1>
+    <ol>
+    {jobs}
+    </ol>
+    </body>
+    </html>
+    """
 
 if __name__=="__main__":
     app.run()
