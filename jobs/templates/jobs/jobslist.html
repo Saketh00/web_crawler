@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+    {% block header %}
+    <h1>Welcome to Jobs page</h1>
+    {% endblock %}
+    {% block body %}
+    <ol>
+        {% for id,title, company_name in jobs %}
+        <li>
+            <a href="/jobs/{{id}}">{{title}}::::{{company_name}}<br/></a>
+        </li>
+        </li>
+        {% endfor %}
+    </ol>
+    {% endblock %}
