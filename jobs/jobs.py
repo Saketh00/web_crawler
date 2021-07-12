@@ -1,7 +1,7 @@
 from flask import Blueprint, g, render_template
 from . import db
 
-bp=Blueprint("jobs","jobs", url_prefix="/jobs")
+bp=Blueprint("jobs","jobs", url_prefix="/")
 
 @bp.route("/")
 def all_jobs():

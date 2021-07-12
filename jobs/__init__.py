@@ -9,4 +9,10 @@ def create_app():
     from . import jobs
     app.register_blueprint(jobs.bp)
 
+    from . import db
+    db.init_app(app)
+
+    from . import crawler
+    crawler.init_app(app)
+
     return app
