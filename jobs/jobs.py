@@ -1,4 +1,5 @@
-from flask import Blueprint, g, render_template
+from flask import Blueprint, g, render_template, redirect, url_for
+from flask import request
 from . import db
 
 bp=Blueprint("jobs","jobs", url_prefix="/jobs")
@@ -37,3 +38,24 @@ def jobdetails(jid):
             "selected" : "success",
             "rejected" : "danger"}
     return render_template("jobs/jobdetails.html", jid=jid, info=info, title=title, company=company, prev=prev, nxt=nxt, status=status, cls=classes[status], crawled_on=crawled_on)
+
+@bp.route("/<jid>/edit", methods=["GET", "POST",])
+def edit_job(jid):
+    conn=db.get_db()
+    cursor=conn.cursor()
+    cursor.execute("select o.title, o.company_name, s.name, o.jd_text, o.crawled_on from openings o, job_status s where o.id=%s and s.id=o.status", (jid,))
+    job=cursor.fetchone()
+    if not job:
+        return render_template("jobs/jobdetails.html"),404
+    
+    if request.method=="GET":
+        title, company_name, status, jd, crawled_on = job
+        cursor.execute("select id, name from job_status")
+        statuses=cursor.fetchall()
+        return render_template("jobs/jobedit.html", jid=jid, info=jd, statuses=statuses, status=status, title=title, crawled_on=crawled_on)
+    elif request.method=="POST":
+        status=request.form.get("status")
+        jd=request.form.get("jd")
+        cursor.execute("update openings set jd_text =%s, status=%s where id=%s",(jd, status, jid))
+        conn.commit()
+        return redirect(url_for("jobs.jobdetails", jid=jid), 302)

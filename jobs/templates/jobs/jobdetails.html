@@ -20,6 +20,10 @@
         {{info}}
     </p>
 
+    <p>
+        <a class="btn btn-primary" href="{{url_for('jobs.edit_job', jid=jid)}}">Edit this job</a>
+    </p>
+
 {% else %}
     <h1> Sorry. That's not a valid job id.</h1>
     <p>

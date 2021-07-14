@@ -23,7 +23,7 @@ def create_app():
         curs.execute("select count(*) from openings")
         count=curs.fetchone()[0]
         curs.execute("select crawled_on from crawl_status order by crawled_on desc limit 1")
-        crawl_date=curs.fetchone()
+        crawl_date=curs.fetchone()[0]
 
         return render_template('index.html', quote=quote, author=author, count=count, date=crawl_date)
 
