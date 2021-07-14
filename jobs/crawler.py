@@ -1,6 +1,8 @@
 import requests
 import bs4
 
+import datetime
+
 import click
 from flask.cli import with_appcontext
 
@@ -22,12 +24,19 @@ def fetch_jobs():
 def insert_jobs(jobs):
     dbconnect=db.get_db()
     cursor=dbconnect.cursor()
+
+    cursor.execute("select id from job_status where name ='crawled'")
+    crawled_id=cursor.fetchone()[0]
+
+    crawled_on=datetime.date.today()
     for i in jobs:
         soup=bs4.BeautifulSoup(i['jobDescription'],features="html.parser")
-        cursor.execute("INSERT INTO openings (title, job_id, company_name, jd_url, jd_text) values (%s,%s,%s,%s,%s)",(i['title'],i['jobId'],i['companyName'],i['jdURL'],soup.text))
+        cursor.execute("INSERT INTO openings (title, job_id, company_name, jd_url, jd_text, status, crawled_on) values (%s,%s,%s,%s,%s,%s,%s)",(i['title'],i['jobId'],i['companyName'],i['jdURL'],str(soup.text),crawled_id,crawled_on))
 
     click.echo(f"Added {len(jobs)} jobs.")
-    
+
+    crawled_on=datetime.datetime.now()
+    cursor.execute("insert into crawl_status (crawled_on) values (%s)",(crawled_on,))    
     dbconnect.commit()
 
 @click.command('crawl', help="Crawl for jobs")
